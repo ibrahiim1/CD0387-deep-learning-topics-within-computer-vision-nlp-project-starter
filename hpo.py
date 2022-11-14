@@ -7,6 +7,7 @@ import torch.optim as optim
 import torchvision
 import torchvision.models as models
 import torchvision.transforms as transforms
+import time
 
 import argparse
 
@@ -16,22 +17,99 @@ def test(model, test_loader):
           testing data loader and will get the test accuray/loss of the model
           Remember to include any debugging/profiling hooks that you might need
     '''
+
+    model.eval()
+    running_loss= 0
+    corrects= 0
+    sampels= 0
+    
+    for inputs, labels in test_loader:
+        inputs, labels = inputs.to(device), labels.to(device)
+        
+        outputs= model(inputs)
+        loss= criterion(outputs, labels)
+        
+        running_loss+= loss.item() * inputs.size(0)
+        corrects+= torch.sum(outputs==labels).item()
+        sampels+= len(inputs) 
+    
+    total_loss = running_loss/sampels
+    accuracy = corrects/sampels
+    
+    print(f"Total loss: {total_loss}, Accuracy is: {accuracy}")
     
 
-def train(model, train_loader, criterion, optimizer):
+def train(model, train_loader, valid_loader, criterion, optimizer, epoches, device):
     '''
     TODO: Complete this function that can take a model and
           data loaders for training and will get train the model
           Remember to include any debugging/profiling hooks that you might need
     '''
-    pass
     
-def net():
+
+    
+    data = {"train": train_loader, "valid": valid_loader}
+
+    for e in range(epoches):
+        start= time.time()
+
+        for mode in ["train", "valid"]:
+            print(f"starting epoche: {e+1}, phase ---> {mode}")
+            
+            running_loss= 0
+            corrects= 0
+            sampels= 0
+            
+            
+            for inputs, labels in data[mode]:
+                inputs, labels = inputs.to(device), labels.to(device)
+
+                if mode= "train":
+                    model.train()
+                    optimizer.zero_grad()
+
+                else:
+                    model.eval
+
+                outputs= model(inputs)
+                loss= criterion(outputs, labels)
+
+                if mode= "train":
+                    loss.backward()
+                    optimizer.step()
+
+                running_loss+= loss.item() * inputs.size(0)
+                corrects+= torch.sum(outputs==labels).item()
+                sampels+= len(inputs)
+            total_loss = running_loss/sampels
+            accuracy = corrects/sampels
+
+            print(f"epoch: {e+1}, phase --> {mode}, total loss --> {total_loss}, accuracy --> {accuracy}")
+
+        e_time = time.time() - start
+        print(f"Epoche --> {e+1}, time ---> {e_time} seconds")
+
+
+
+    
+def net(device):
     '''
     TODO: Complete this function that initializes your model
           Remember to use a pretrained model
     '''
-    pass
+    model= models.resnet50(pretrained= True)
+
+    for para in model.parameters():
+        para.requires_grad = False
+
+    model.fc = nn.Linear(model.fc.in_features, 133)
+
+    for para in model.fc.parameters():
+        para.requires_grad = True
+
+    model = model.to(device)
+    print(model)
+    return model
 
 def create_data_loaders(data, batch_size):
     '''
