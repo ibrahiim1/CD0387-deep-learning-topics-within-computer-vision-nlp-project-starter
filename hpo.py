@@ -11,7 +11,7 @@ import time
 
 import argparse
 
-def test(model, test_loader):
+def test(model, test_loader, criterion, device):
     '''
     TODO: Complete this function that can take a model and a 
           testing data loader and will get the test accuray/loss of the model
@@ -28,7 +28,7 @@ def test(model, test_loader):
         
         outputs= model(inputs)
         loss= criterion(outputs, labels)
-        
+        _, preds = torch.max(outputs, 1)
         running_loss+= loss.item() * inputs.size(0)
         corrects+= torch.sum(outputs==labels).item()
         sampels+= len(inputs) 
