@@ -16,7 +16,7 @@ def test(model, test_loader):
           testing data loader and will get the test accuray/loss of the model
           Remember to include any debugging/profiling hooks that you might need
     '''
-    pass
+    
 
 def train(model, train_loader, criterion, optimizer):
     '''
