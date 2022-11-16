@@ -188,7 +188,7 @@ if __name__=='__main__':
     parser.add_argument("--epoches", type= int, default= 14)
     parser.add_argument('--data', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
     parser.add_argument('--model_dir', type=str, default=os.environ['SM_MODEL_DIR'])
-    
+    parser.add_argument('--output_dir', type=str, default=os.environ['SM_OUTPUT_DATA_DIR'])
     args=parser.parse_args()
     
     main(args)

@@ -39,7 +39,7 @@ def test(model, test_loader, criterion, device):
     total_loss = running_loss/sampels
     accuracy = corrects/sampels
     
-    print(f"Total loss: {total_loss}, Accuracy is: {accuracy}")
+    print(f"Test loss: {total_loss}, Accuracy is: {accuracy}")
     
 
 def train(model, train_loader, valid_loader, criterion, optimizer, epoches, device):
@@ -193,7 +193,7 @@ if __name__=='__main__':
     parser.add_argument("--epoches", type= int, default= 5)
     parser.add_argument('--data', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
     parser.add_argument('--model_dir', type=str, default=os.environ['SM_MODEL_DIR'])
-    
+    parser.add_argument('--output_dir', type=str, default=os.environ['SM_OUTPUT_DATA_DIR'])
     args=parser.parse_args()
 
     main(args)
