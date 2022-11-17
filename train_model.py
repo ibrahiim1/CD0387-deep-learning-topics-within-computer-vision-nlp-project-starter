@@ -12,17 +12,20 @@ from torchvision import datasets
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 import argparse
+from smdebug import modes
+from smdebug.pytorch import get_hook
 
 
 #TODO: Import dependencies for Debugging andd Profiling
 
-def test(model, test_loader, criterion, device):
+def test(model, test_loader, criterion, device, hook):
     '''
     TODO: Complete this function that can take a model and a 
           testing data loader and will get the test accuray/loss of the model
           Remember to include any debugging/profiling hooks that you might need
     '''
     model.eval()
+    hook.set_mode(smd.modes.EVAL)
     running_loss= 0
     corrects= 0
     sampels= 0
@@ -66,9 +69,11 @@ def train(model, train_loader, valid_loader, criterion, optimizer, epoches, devi
 
                 if mode== "train":
                     model.train()
+                    hook.set_mode(smd.modes.TRAIN)
 
                 else:
                     model.eval()
+                    hook.set_mode(smd.modes.EVAL)
 
                 outputs= model(inputs)
                 loss= criterion(outputs, labels)
@@ -152,6 +157,9 @@ def main(args):
     
     print(f"model using ---> {device} <---")
 
+    hook = smd.Hook.create_from_json_file()
+    hook.register_hook(model)
+
     model=net(device)
     
     '''
@@ -165,12 +173,12 @@ def main(args):
     TODO: Call the train function to start training your model
     Remember that you will need to set up a way to get training data from S3
     '''
-    model=train(model, train_loader, valid_loader, criterion, optimizer, args.epoches, device)
+    model=train(model, train_loader, valid_loader, criterion, optimizer, args.epoches, device, hook)
     
     '''
     TODO: Test the model to see its accuracy
     '''
-    test(model, test_loader, criterion, device)
+    test(model, test_loader, criterion, device, hook)
     
     '''
     TODO: Save the trained model
@@ -185,7 +193,7 @@ if __name__=='__main__':
 
     parser.add_argument("--batch_size", type= int, default= 128)
     parser.add_argument("--lr", type= float, default= .01)
-    parser.add_argument("--epoches", type= int, default= 14)
+    parser.add_argument("--epoches", type= int, default= 10)
     parser.add_argument('--data', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
     parser.add_argument('--model_dir', type=str, default=os.environ['SM_MODEL_DIR'])
     parser.add_argument('--output_dir', type=str, default=os.environ['SM_OUTPUT_DATA_DIR'])
