@@ -14,7 +14,9 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 import argparse
 from smdebug import modes
 from smdebug.pytorch import get_hook
-
+import os
+import json
+import smdebug.pytorch as smd
 
 #TODO: Import dependencies for Debugging andd Profiling
 
@@ -45,7 +47,7 @@ def test(model, test_loader, criterion, device, hook):
     
     print(f"Total loss: {total_loss}, Accuracy is: {accuracy}")
 
-def train(model, train_loader, valid_loader, criterion, optimizer, epoches, device):
+def train(model, train_loader, valid_loader, criterion, optimizer, epoches, device, hook):
     '''
     TODO: Complete this function that can take a model and
           data loaders for training and will get train the model
@@ -157,10 +159,12 @@ def main(args):
     
     print(f"model using ---> {device} <---")
 
+    
+    model=net(device)
+    
     hook = smd.Hook.create_from_json_file()
     hook.register_hook(model)
 
-    model=net(device)
     
     '''
     TODO: Create your loss and optimizer
@@ -186,17 +190,21 @@ def main(args):
     torch.save(model.state_dict(), os.path.join(args.model_dir, "model_2.pt"))
 
 if __name__=='__main__':
+    
+    
     parser=argparse.ArgumentParser()
     '''
     TODO: Specify any training args that you might need
     '''
 
-    parser.add_argument("--batch_size", type= int, default= 128)
+    parser.add_argument("--batch-size", type= int, default= 128)
     parser.add_argument("--lr", type= float, default= .01)
-    parser.add_argument("--epoches", type= int, default= 10)
+    parser.add_argument("--epoches", type= int, default= 6)
+    parser.add_argument("--hosts", type=list, default=json.loads(os.environ["SM_HOSTS"]))
+    parser.add_argument("--current-host", type=str, default=os.environ["SM_CURRENT_HOST"])
     parser.add_argument('--data', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
-    parser.add_argument('--model_dir', type=str, default=os.environ['SM_MODEL_DIR'])
-    parser.add_argument('--output_dir', type=str, default=os.environ['SM_OUTPUT_DATA_DIR'])
+    parser.add_argument('--model-dir', type=str, default=os.environ['SM_MODEL_DIR'])
+    parser.add_argument('--output-dir', type=str, default=os.environ['SM_OUTPUT_DATA_DIR'])
     args=parser.parse_args()
     
     main(args)

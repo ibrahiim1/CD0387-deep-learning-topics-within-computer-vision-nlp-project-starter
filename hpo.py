@@ -11,7 +11,8 @@ import time
 from torchvision import datasets
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
-
+import os
+import json
 import argparse
 
 def test(model, test_loader, criterion, device):
@@ -188,12 +189,14 @@ if __name__=='__main__':
     
     
 
-    parser.add_argument("--batch_size", type= int, default= 128)
-    parser.add_argument("--lr", type= float, default= .01)
-    parser.add_argument("--epoches", type= int, default= 5)
+    parser.add_argument("--batch-size", type= int, default= 128)
+    parser.add_argument("--lr", type= float, default= .001)
+    parser.add_argument("--epoches", type= int, default= 2)
+    parser.add_argument("--hosts", type=list, default=json.loads(os.environ["SM_HOSTS"]))
+    parser.add_argument("--current-host", type=str, default=os.environ["SM_CURRENT_HOST"])
     parser.add_argument('--data', type=str, default=os.environ['SM_CHANNEL_TRAINING'])
-    parser.add_argument('--model_dir', type=str, default=os.environ['SM_MODEL_DIR'])
-    parser.add_argument('--output_dir', type=str, default=os.environ['SM_OUTPUT_DATA_DIR'])
+    parser.add_argument('--model-dir', type=str, default=os.environ['SM_MODEL_DIR'])
+    parser.add_argument('--output-dir', type=str, default=os.environ['SM_OUTPUT_DATA_DIR'])
     args=parser.parse_args()
 
     main(args)
