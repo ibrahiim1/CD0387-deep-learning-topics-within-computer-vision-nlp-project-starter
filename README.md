@@ -35,7 +35,8 @@ Remember that your README should:
 ## Model Deployment
 **TODO**: Give an overview of the deployed model and instructions on how to query the endpoint with a sample input.
 
-**TODO** Remember to provide a screenshot of the deployed active endpoint in Sagemaker.
+Screenshot of the deployed active endpoint in Sagemaker.
+![endpoint](endpoint.png)
 
 ## Standout Suggestions
 **TODO (Optional):** This is where you can provide information about any standout suggestions that you have attempted.
