@@ -34,5 +34,5 @@ I get that my model have two problems which are overfitting & bad learning rate 
 I deployed the model as shown at ipynb file, to get a prediction from this endpoint you have only to send the image location into the predict function, and aftar that using the plot_result function to show the predicted imahe and it's label and the preticted label from the model.
 
 Screenshot of the deployed active endpoint in Sagemaker:
-![endpoint](endpoint.PNG)
+  ![endpoint](endpoint.PNG)
 
