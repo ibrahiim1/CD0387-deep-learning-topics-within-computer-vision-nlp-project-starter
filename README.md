@@ -1,42 +1,38 @@
 # Image Classification using AWS SageMaker
 
-Use AWS Sagemaker to train a pretrained model that can perform image classification by using the Sagemaker profiling, debugger, hyperparameter tuning and other good ML engineering practices. This can be done on either the provided dog breed classication data set or one of your choice.
+Use AWS Sagemaker to train a pretrained model that can perform image classification by using the Sagemaker profiling, debugger, hyperparameter tuning and other good ML engineering practices. 
 
 ## Project Set Up and Installation
-Enter AWS through the gateway in the course and open SageMaker Studio. 
-Download the starter files.
-Download/Make the dataset available. 
+This project is for determine the given dog image breed, the trained data have 133 dog breed which used for our model training, the project done using pytorch library throw sagemaker, and we used the transfer learning throw pretrained model which is resnet50 with modifing the outputs classes number to 133 as we have 133 dog breed classes.
+The trained data in this project is more than 8000 dogs images with the different 133 breeds, and also we have validation & test images will be used to detemine the best model.
 
 ## Dataset
-The provided dataset is the dogbreed classification dataset which can be found in the classroom.
-The project is designed to be dataset independent so if there is a dataset that is more interesting or relevant to your work, you are welcome to use it to complete the project.
+The trained data in this project is more than 8000 dogs images with the different 133 breeds, and also we have validation & test images will be used to detemine the best model.
 
 ### Access
-Upload the data to an S3 bucket through the AWS Gateway so that SageMaker has access to the data. 
+I uploaded the data to an S3 bucket through the AWS Gateway so that SageMaker has access to the data. 
 
 ## Hyperparameter Tuning
-What kind of model did you choose for this experiment and why? Give an overview of the types of parameters and their ranges used for the hyperparameter search
-
-Remember that your README should:
-- Include a screenshot of completed training jobs
-- Logs metrics during the training process
-- Tune at least two hyperparameters
-- Retrieve the best best hyperparameters from all your training jobs
+I used a resnet50 pretrained model with adjusting the output classes to 133, using tranfser learning helps our algorthim learning faster and provide better accuracy.
+I did hyperparameter tuning for two parameters which are learning rate & batch size, and I give the following ranges:
+  - "learning rate": [0.001, 0.1]
+  - "batch size": [64, 128, 256, 512]
+  
+- Screenshot of the completed training jobs:
+  ![training_jobs](training_jobs.png)
+- The best hyperparameters from all my training jobs:
+  ![best](best.png)
 
 ## Debugging and Profiling
-**TODO**: Give an overview of how you performed model debugging and profiling in Sagemaker
+First I configured Debugger & Profiler Rules and Hook Parameters, after that I pased these parameters into my estimator to catch any error specified into the defined rules. 
 
 ### Results
-**TODO**: What are the results/insights did you get by profiling/debugging your model?
-
-**TODO** Remember to provide the profiler html/pdf file in your submission.
+I get that my model have two problems which are overfitting & bad learning rate hyperparameters.
 
 
 ## Model Deployment
-**TODO**: Give an overview of the deployed model and instructions on how to query the endpoint with a sample input.
+I deployed the model as shown at ipynb file, to get a prediction from this endpoint you have only to send the image location into the predict function, and aftar that using the plot_result function to show the predicted imahe and it's label and the preticted label from the model.
 
-Screenshot of the deployed active endpoint in Sagemaker.
+Screenshot of the deployed active endpoint in Sagemaker:
 ![endpoint](endpoint.PNG)
 
-## Standout Suggestions
-**TODO (Optional):** This is where you can provide information about any standout suggestions that you have attempted.
